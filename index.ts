@@ -53,12 +53,13 @@ async function main() {
 
   const params = {
     v: VERSION,
+    limit: 250, // max limit per docs
     offset: 0,
     oauth_token: process.env.OAUTH_TOKEN
   }
 
   while (params.offset < totalCount) {
-    checkinRequest = await axios.get(`https://api.foursquare.com/v2/users/${process.env.USER_ID}/historysearch`, { params });
+    checkinRequest = await axios.get(`https://api.foursquare.com/v2/users/self/checkins`, { params });
     let response: CheckinResponse = checkinRequest.data.response;
     totalCount = response.checkins.count;
     console.log(`Exporting ${params.offset} - ${params.offset + response.checkins.items.length} of ${totalCount}`);
