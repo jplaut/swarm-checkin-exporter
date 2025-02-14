@@ -8,18 +8,18 @@ const createCSVWriter = (i) => (
   createCsvWriter({
     path: `export_${i}.csv`,
     header: [
-        {id: 'name', title: 'NAME'},
-        {id: 'address', title: 'ADDRESS'},
-        {id: 'latlng', title: 'LAT/LNG'}
+      {id: 'name', title: 'NAME'},
+      {id: 'address', title: 'ADDRESS'},
+      {id: 'latlng', title: 'LAT/LNG'}
     ]
   })
 );
 
 const createRows = (checkins) => (
   checkins.map(checkin => ({
-     name: checkin.venue.name,
-     // need to replace cross streets (eg 253 W 51st St (btwn Broadway & 8th Ave))
-     address: checkin.venue.location.formattedAddress.join(', ').replace(/ \([^)]*\)/g, ''),
+    name: checkin.venue.name,
+    // need to replace cross streets (eg 253 W 51st St (btwn Broadway & 8th Ave))
+    address: checkin.venue.location.formattedAddress.join(', ').replace(/ \([^)]*\)/g, ''),
     latlng: `${checkin.venue.location.lat},${checkin.venue.location.lng}`
   }))
 )
@@ -46,7 +46,6 @@ async function main() {
     }
 
     await csvWriter.writeRecords(createRows(checkinRequest.data.response.checkins.items));
-    
   }
   
   console.log(`Completed exporting ${params.offset} checkins.`);
