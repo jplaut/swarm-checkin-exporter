@@ -2,9 +2,33 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const axios = require('axios');
 require('dotenv').config()
 
-const VERSION = new Date().toISOString().slice(0,10).replace(/-/g,"");
+type Checkin = {
+  venue: {
+    name: string;
+    location: {
+      lat: number;
+      lng: number;
+      formattedAddress: string[];
+    }
+  }
+}
 
-const createCSVWriter = (i) => (
+type CheckinRow = {
+  name: string;
+  address: string;
+  latlng: string;
+}
+
+type CheckinResponse = {
+  checkins: {
+    count: number;
+    items: Checkin[];
+  }
+}
+
+const VERSION: string = new Date().toISOString().slice(0,10).replace(/-/g,"");
+
+const createCSVWriter = (i: number) => (
   createCsvWriter({
     path: `export_${i}.csv`,
     header: [
@@ -15,7 +39,7 @@ const createCSVWriter = (i) => (
   })
 );
 
-const createRows = (checkins) => (
+const createRows = (checkins: Checkin[]): CheckinRow[] => (
   checkins.map(checkin => ({
     name: checkin.venue.name,
     // need to replace cross streets (eg 253 W 51st St (btwn Broadway & 8th Ave))
@@ -35,9 +59,10 @@ async function main() {
 
   while (params.offset < totalCount) {
     checkinRequest = await axios.get(`https://api.foursquare.com/v2/users/${process.env.USER_ID}/historysearch`, { params });
-    totalCount = checkinRequest.data.response.checkins.count;
-    console.log(`Exporting ${params.offset} - ${params.offset + checkinRequest.data.response.checkins.items.length} of ${totalCount}`);
-    params.offset += checkinRequest.data.response.checkins.items.length;
+    let response: CheckinResponse = checkinRequest.data.response;
+    totalCount = response.checkins.count;
+    console.log(`Exporting ${params.offset} - ${params.offset + response.checkins.items.length} of ${totalCount}`);
+    params.offset += response.checkins.items.length;
 
     // limit each CSV to 2000 so upload to My Maps works
     if (params.offset > csvIndex * 2000) {

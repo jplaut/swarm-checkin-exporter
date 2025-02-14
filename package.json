@@ -2,13 +2,14 @@
   "dependencies": {
     "axios": "^1.7.9",
     "csv-writer": "^1.6.0",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "ts-node": "^10.9.2"
   },
   "name": "swarm-exporter",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "main": "node index.js",
+    "main": "ts-node index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
