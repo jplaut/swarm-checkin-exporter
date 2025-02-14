@@ -11,7 +11,8 @@ I ended up reverse engineering the Swarm website and found a request on the page
 Add those to the `.env.example` file and rename it `.env`.
 
 ### Running the script
-`npm run main`
+* `npm install`
+* `npm run main`
 
 ### Output
 The script outputs files called `export_${i}.csv`.
